@@ -13,7 +13,7 @@
 Bài này giao diện là một trang blog có chức năng comment và report comment, dính lỗ hổng XSS stored. Khi report comment bot với quyền admin sẽ quét và thực hiện script đã được inject, lúc này ta sẽ đánh cắp được cookie của bot và lấy được flag.
 ## 3. Reconnaissance
 - Truy cập vào trang web và thấy dòng chữ `Are you robot`.
-![[Pasted image 20260210120355.png]]
+![](images/Pasted%20image%2020260210153440.png)
 -> nghĩ ngay đến /robots.txt
 - Sau khi truy cập vào /robots.txt ta thấy được một đoạn base64 encode như sau:
 ![[Pasted image 20260210093058.png]]
