@@ -12,22 +12,35 @@
 Bài này round 1 sẽ cho một giao diện với các thẻ html đè lên nhau và yêu cầu người chơi phải tìm ra thẻ có đường dẫn đến page tiếp theo, round 2 sẽ bắt người chơi phải tìm flag trong các directory và thử nhiều flag để tìm ra flag thật.
 ## 3. Reconnaissance round 1
 - Truy cập vào trang web và thấy dòng chữ `Are you robot`.
+
 ![](images/Pasted%20image%2020260210092911.png)
+
 -> nghĩ ngay đến /robots.txt
 - Sau khi truy cập vào /robots.txt ta thấy được một đoạn base64 encode như sau:
+
 ![](images/Pasted%20image%2020260210093058.png)
+
 -> decode base64 ta được: `/pages/page-1-Tombstone.html`
 - Truy cập vào đường dẫn trên ta sẽ thấy giao diện gồm nhiều thẻ html css xếp chồng lên nhau
+
 ![](images/Pasted%20image%2020260210093557.png)
+
 - Nếu để thế này rất khó nhìn nên ta mở code lên đọc luôn
+
 ![](images/Pasted%20image%2020260210101958.png)
+
 - Có rất nhiều thẻ như thế này, dự đoán sẽ có 1 thẻ nào đó chứa nội dung
 -> Ctrl + F search `<a` thử xem sao
+
 ![](images/Pasted%20image%2020260210102108.png)
+
 - Đã tìm thấy đường dẫn đến page tiếp theo, copy paste vào url để đi tiếp
+
 ![](images/Pasted%20image%2020260210102213.png)
+
 - Lần này cũng tương tự, dự đoán với dạng bài này sẽ có rất nhiều page
 -> viết script để tự động hóa việc khai thác
+
 ## 4. Exploitation round 1
 - Ta sẽ viết script sao cho tự động hóa việc tìm kiếm nội dung sau đó gán thẳng vào url để đi đến trang tiếp theo rồi lại tiếp tục lặp lại quy trình đó cho đến khi không thể tìm thấy nữa.
 - Python script:
@@ -62,13 +75,19 @@ while True:
         print(f"Lỗi xảy ra: {e}")  
         break
 ```
+
 - Đến trang thứ 101 là kết thúc
+
 ![](images/Pasted%20image%2020260210104150.png)
+
 - Trang cuối là thông báo đã vượt qua round 1 và chuyển sang round 2
+
 ![](images/Pasted%20image%2020260210104240.png)
 ## 3. Reconnaissance round 2
 - Truy cập vào `PROCEED TO ROUND 2` ta sẽ thấy giao diện gồm các thư mục và mỗi thư mục lại có những thư mục con và các tệp nội dung đi kèm:
+
 ![](images/Pasted%20image%2020260210104505.png)
+
 -> ta cũng sẽ viết script để khai thác round này
 ## 4. Exploitation round 2
 - Script ở round này sẽ dùng BFS quét toàn bộ file để tìm flag:
@@ -125,5 +144,9 @@ bfs(start_url)
 for item in results:  
     print(item)
 ```
+
 Kết quả:
-![](images/Pasted%20image%2020260210114749.png)-> Thử từng flag để lấy flag thật
+
+![](images/Pasted%20image%2020260210114749.png)
+
+-> Thử từng flag để lấy flag thật
