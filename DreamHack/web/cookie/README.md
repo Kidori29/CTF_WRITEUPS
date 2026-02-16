@@ -20,6 +20,7 @@ Giao diện là một page chức năng chính là đăng nhập:
 ![](images/Screenshot%202026-02-11%20165220.png)
 
 Mở source trong devtools ta sẽ thấy tài khoản mặc định là `guest/guest`
+
 ![](images/Pasted%20image%2020260211172426.png)
 
 -> Đăng nhập xem sao

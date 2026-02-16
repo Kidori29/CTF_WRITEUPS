@@ -1,4 +1,4 @@
-# What time is it?
+# # {"role": "admin"}
 
 ## Challenge Information
 - **Category**: Web Exploitation
