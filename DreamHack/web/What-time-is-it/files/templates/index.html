@@ -1,0 +1,14 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Home</title>
+
+{% if username %}
+  <p>Hello, <b>{{ username }}</b>! / <a href="/welcome">welcome</a> / <a href="/logout">logout</a></p>
+{% else %}
+  <p>Hello, <b>guest</b>!</p>
+  <p><a href="/register">register</a> <a href="/login">login</a></p>
+{% endif %}
+
+{% if is_admin %}
+  <pre>{{ flag }}</pre>
+{% endif %}

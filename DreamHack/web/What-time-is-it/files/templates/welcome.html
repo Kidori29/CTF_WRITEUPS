@@ -1,0 +1,12 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Welcome</title>
+
+<p>현재 로그인: <b>{{ username }}</b> / <a href="/">home</a> / <a href="/logout">logout</a></p>
+<hr>
+
+<ul>
+  {% for u in users %}
+    <li>[{{ u["created_at_str"] }}] {{ u["username"] }}님 환영합니다.</li>
+  {% endfor %}
+</ul>
