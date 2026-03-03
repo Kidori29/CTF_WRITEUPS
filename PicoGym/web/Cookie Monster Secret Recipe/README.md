@@ -33,10 +33,9 @@ Bắt request login và xem response windown, bôi đen đoạn mã sau `secret_
 
 ![[Pasted image 20260110020305.png]]
 
-## 4. Analysis & Exploitation
+## 4. Exploitation
 
-Để bắt được các request chuyển hướng, mình có 2 cách: dùng **Burp Suite** (HTTP History) hoặc dùng **Developer Tools** của trình duyệt. Ở đây mình dùng Developer Tools cho đơn giản.
-
+Để bắt được các request chuyển hướng, có 2 cách: dùng **Burp Suite** (HTTP History) hoặc dùng **Developer Tools** của trình duyệt. Ở đây ta sẽ dùng Developer Tools cho đơn giản.
 ### Bước 1: Monitor Network
 1. Mở F12 -> Tab **Network**.
 2. Tích vào ô **Preserve log** (Giữ lại log). *Bước này cực quan trọng, nếu không khi trang load lại, các request cũ chứa Flag sẽ biến mất.*
@@ -47,10 +46,6 @@ Mình quan sát thấy có 2 request `GET` lạ xuất hiện trước khi load 
 
 1. `GET /next-page/id=cGljb0NURntwcm94aWVzX2Fs`
 2. `GET /next-page/id=bF90aGVfd2F5XzI1YjMxYzYyfQ==`
-
-![Screenshot Network Tab showing redirects](link_to_image_here)
-*(Chỗ này bạn chèn ảnh chụp tab Network khoanh đỏ 2 dòng request trên)*
-
 ### Bước 3: Decode
 Dữ liệu trong tham số `id` nhìn giống **Base64** (kết thúc bằng dấu `=` và gồm các ký tự a-z, A-Z, 0-9).
 

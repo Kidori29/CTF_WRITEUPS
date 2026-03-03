@@ -1,4 +1,4 @@
-# Cookie Monster Secret Recipe
+# no quotes 2
 
 ## Challenge Information
 - **Category**: Web Exploitation
@@ -79,15 +79,3 @@ Dựa vào các dữ kiện ấy ta có thể viết payload như sau:
 ```mysql
 
 ```
-
-### Script (Optional)
-Một đoạn script Python nhỏ để tự động hóa việc này (nếu lười copy paste thủ công):
-
-```python
-import base64
-
-part1 = "cGljb0NURntwcm94aWVzX2Fs"
-part2 = "bF90aGVfd2F5XzI1YjMxYzYyfQ=="
-
-flag = base64.b64decode(part1).decode() + base64.b64decode(part2).decode()
-print("Flag found: " + flag)
