@@ -6,9 +6,9 @@
 - **Tags**: #web #CSP #CSRF
 ---
 ## 1. Description
->Do you know that most of the talented developers are weeboo? I invite you to eat some Bun and play with Elysia-chan! [https://elysiajs.com/](https://elysiajs.com/)
+>Report the violated posts...
 ## 2. Overview
-Bài với mục tiêu giới thiệu framework là chính cũng như phần GraphQL Playground trong graphql-yoga
+Bài này XSS kết hợp bypass CSP và CSRF
 ## 3. Reconnaissance
 Khi mở trang web, em có xem các tính năng cơ bản:
 - `/`: Trang chủ hiển thị các bài viết.
