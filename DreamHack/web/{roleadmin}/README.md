@@ -1,4 +1,4 @@
-# # {"role": "admin"}
+# {"role": "admin"}
 
 ## Challenge Information
 - **Category**: Web Exploitation

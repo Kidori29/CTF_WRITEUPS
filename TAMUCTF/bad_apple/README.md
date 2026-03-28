@@ -53,6 +53,7 @@ Trong hàm `convert()` lại gọi đến một hàm đặt biệt là `extract_
 
 ![](images/Pasted%20image%2020260322185214.png)
 
+-> Lỗ hổng nằm ở việc cấu hình cấm user đọc file `.gif` nhưng lại cho phép đọc file `.png`
 ## 4. Exploitation
 Dùng đường dẫn `/browse/admin/` ta lấy được tên file flag là: `e017b6321bda6812ec80e9fac368709e-flag.gif`
 
@@ -89,6 +90,7 @@ Ta sẽ đọc các file từ `frame_0001.png` để lấy hết flag:
 
 ![](images/Pasted%20image%2020260322183743.png)
 
+*note: lỗ hổng thật sự nằm ở chỗ server cấu hình chặn file .gif nhưng lại cho phép file .png trong khi có chức năng convert gif to png.*
 ## 5. Fix
 
 ```python
