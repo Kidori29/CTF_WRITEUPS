@@ -56,11 +56,12 @@ Và để ý ở hàm `pick_loads()` ở dòng số 11, kết hợp với tham s
 ![](images/Pasted%20image%2020260328204216.png)
 
 Deserialization xảy ra ở ngay phần return của hàm `pickle_loads()`, đoạn return này trả về `pickle.loads(base64.b64decode(s))` chính là tiến hành decode chuỗi Base64 và tái tạo nó thành object trong Python. 
+
 Và hàm `pickle.loads()` cực kỳ nguy hiểm ở chỗ nó khi thực hiện việc tái tạo object, nó cho phép các object này tự định nghĩa lại cách chúng được tái tạo thông qua magic method là `__reduce__()`. Và với hàm này, nếu ta inject mã độc vào thì `pickle.loads()` cũng sẽ nhắm mắt cho qua và thực thi chúng một các tự nguyện.
 
--> Ta có thể xác định được thêm lỗ hổng insecure deserialization.
+-> Data đi từ cơ sở dữ liệu -> được đưa lên template engine -> lọt vào filter pickle -> Dính insecure deserialization. 
 
-Kết hợp cả SQLi ở trên ta có thể chain từ SQLi -> insecure deserialization để RCE?????
+Liệu ta có thể chain từ SQLi -> insecure deserialization để RCE?????
 ## 4. Exploitation
 Kết hợp với endpoint dính SQLi ở trên, ta sẽ viết script để tạo payload như sau:
 

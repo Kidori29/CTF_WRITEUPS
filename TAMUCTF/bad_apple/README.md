@@ -118,3 +118,6 @@ Options -Indexes  (thay vì +Indexes)
     Require valid-user
 </Directory>
 ```
+
+>h@ppy h@ck!n9 
+>*(BKSEC)*
