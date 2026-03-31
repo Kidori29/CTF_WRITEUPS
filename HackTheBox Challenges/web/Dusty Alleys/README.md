@@ -80,7 +80,7 @@ Host: guardian.firstalleyontheleft.com
 
 ![](images/Pasted%20image%2020260328173245.png)
 
-Ở phần `/guardian` ta có thể thấy server dùng hàm `node_fetch` để gửi request đến đích `quote` mà ta đưa vào, trong đó lại set headers là FLAG mà ta cần tìm. Sau đó chuyển toàn bộ kết quả của request địa chỉ `quote` bảo đến in ngược lại ra màn hình. Lúc này ta sẽ tận dụng `/think` và bảo server tự gọi đến chính nó thông qua `localhost:1337` để đọc cái header đó và lấy FLAG:
+Ở phần `/guardian` ta có thể thấy server dùng hàm `node_fetch` để gửi request đến đích `quote` mà ta đưa vào, trong đó lại set headers là FLAG mà ta cần tìm. Sau đó chuyển toàn bộ kết quả của request địa chỉ mà `quote` bảo đến in ngược lại ra màn hình. Lúc này ta sẽ tận dụng `/think` và bảo server tự gọi đến chính nó thông qua `localhost:1337` để đọc cái header đó và lấy FLAG:
 
 ![](images/Pasted%20image%2020260328173739.png)
 
