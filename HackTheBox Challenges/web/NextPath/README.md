@@ -117,8 +117,8 @@ Bây giờ ta sẽ làm một phép toán đơn giản để tính cần bao nhi
  -> 3M + 15P + 8 = 100
  -> M + 5P = 92/3 (vô lý)
  
- "../" × M  +  "proc/1/root/" × P  +  "flag.txt.png"
- 3M chars      12P chars                 12 chars
+ "../" × M  +  "proc/1/root/" × P  +  "flag.txt"
+ 3M chars      12P chars               8 chars
  
  -> 3M + 12P + 8 = 100
  -> 3(M + 4P) = 92 (vô lý)
